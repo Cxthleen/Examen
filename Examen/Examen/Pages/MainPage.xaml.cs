@@ -1,37 +1,119 @@
-using Examen.Services;
+using Examen.Data;
+using Examen.Data.Models;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Windows.UI;
 
 namespace Examen.Pages
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
+        private DateTime _currentDate = DateTime.Now;
+        private AppDbContext _db = new AppDbContext();
+
         public MainPage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            _db.Database.EnsureCreated();
+            RenderCalendar();
+        }
 
-            if (AuthService.CurrentUser != null)
+        private void RenderCalendar()
+        {
+            CalendarGrid.Children.Clear();
+
+            MonthText.Text = _currentDate.ToString("MMMM yyyy");
+
+            DateTime firstDay = new DateTime(_currentDate.Year, _currentDate.Month, 1);
+            int startDay = (int)firstDay.DayOfWeek;
+
+            // Monday = first column
+            startDay = (startDay == 0) ? 6 : startDay - 1;
+
+            int daysInMonth = DateTime.DaysInMonth(_currentDate.Year, _currentDate.Month);
+            int cellIndex = startDay;
+
+            var appointments = _db.Appointments.ToList();
+
+            for (int day = 1; day <= daysInMonth; day++)
             {
-                WelcomeText.Text = $"Welcome, {AuthService.CurrentUser.Name}!";
+                int row = cellIndex / 7;
+                int col = cellIndex % 7;
+
+                var border = new Border
+                {
+                    Background = new SolidColorBrush(Colors.White),
+                    CornerRadius = new CornerRadius(10),
+                    Padding = new Thickness(6),
+                    Margin = new Thickness(4)
+                };
+
+                var stack = new StackPanel();
+
+                var dayText = new TextBlock
+                {
+                    Text = day.ToString(),
+                    HorizontalAlignment = HorizontalAlignment.Right
+                };
+
+                stack.Children.Add(dayText);
+
+                DateTime currentDay = new DateTime(_currentDate.Year, _currentDate.Month, day);
+
+                var dayAppointments = appointments
+                    .Where(a => a.Date.Date == currentDay.Date)
+                    .ToList();
+
+                foreach (var appt in dayAppointments)
+                {
+                    var btn = new Button
+                    {
+                        Content = appt.Title,
+                        Margin = new Thickness(0, 2, 0, 0),
+                        HorizontalAlignment = HorizontalAlignment.Stretch
+                    };
+
+                    btn.Click += async (s, e) =>
+                    {
+                        var dialog = new ContentDialog
+                        {
+                            Title = appt.Title,
+                            Content = appt.Description,
+                            CloseButtonText = "Close",
+                            XamlRoot = this.Content.XamlRoot
+                        };
+
+                        await dialog.ShowAsync();
+                    };
+
+                    stack.Children.Add(btn);
+                }
+
+                border.Child = stack;
+
+                Grid.SetRow(border, row);
+                Grid.SetColumn(border, col);
+
+                CalendarGrid.Children.Add(border);
+
+                cellIndex++;
             }
+        }
+
+        private void PrevMonth_Click(object sender, RoutedEventArgs e)
+        {
+            _currentDate = _currentDate.AddMonths(-1);
+            RenderCalendar();
+        }
+
+        private void NextMonth_Click(object sender, RoutedEventArgs e)
+        {
+            _currentDate = _currentDate.AddMonths(1);
+            RenderCalendar();
         }
     }
 }

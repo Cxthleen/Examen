@@ -7,26 +7,64 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Examen.Controls"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Background="Snow">
 
-    <Grid>
+    <Grid Padding="16">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <!-- Header -->
-            <RowDefinition Height="*" />
-            <!-- Content -->
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header at the top -->
-        <controls:HeaderControl Grid.Row="0" />
-
-        <!-- Page Content -->
-        <StackPanel Grid.Row="1" VerticalAlignment="Center"
-                    HorizontalAlignment="Center" Spacing="8">
-
-            <TextBlock x:Name="WelcomeText" FontSize="24" FontWeight="Bold" />
-            <TextBlock Text="You are now logged in!" FontSize="16" Foreground="Gray"/>
-
+        <!-- Header -->
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+            <Button Content="◀" Click="PrevMonth_Click"/>
+            <TextBlock x:Name="MonthText" FontSize="24" FontWeight="SemiBold"/>
+            <Button Content="▶" Click="NextMonth_Click"/>
         </StackPanel>
+
+        <!-- Weekday headers -->
+        <Grid Grid.Row="1" Margin="0,12,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Mon" Grid.Column="0" HorizontalAlignment="Center"/>
+            <TextBlock Text="Tue" Grid.Column="1" HorizontalAlignment="Center"/>
+            <TextBlock Text="Wed" Grid.Column="2" HorizontalAlignment="Center"/>
+            <TextBlock Text="Thu" Grid.Column="3" HorizontalAlignment="Center"/>
+            <TextBlock Text="Fri" Grid.Column="4" HorizontalAlignment="Center"/>
+            <TextBlock Text="Sat" Grid.Column="5" HorizontalAlignment="Center"/>
+            <TextBlock Text="Sun" Grid.Column="6" HorizontalAlignment="Center"/>
+        </Grid>
+
+        <!-- Calendar -->
+        <Grid x:Name="CalendarGrid" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+        </Grid>
     </Grid>
 </Page>

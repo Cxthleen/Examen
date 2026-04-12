@@ -13,6 +13,7 @@ namespace Examen.Data
     public class AppDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -33,6 +34,11 @@ namespace Examen.Data
             modelBuilder.Entity<User>().HasData(
                 new User { Id = 1, Name = "Admin", Username = "admin", Email = "admin@admin.com", Password = "admin123" },
                 new User { Id = 2, Name = "Peanut", Username = "peanut", Email = "peanut@yum.com", Password = "peanut123" }
+            );
+
+            modelBuilder.Entity<Appointment>().HasData(
+                new Appointment { Id = 1, Date = DateTime.Today, Title = "Meeting", Description = "Team sync" },
+                new Appointment { Id = 2, Date = DateTime.Today.AddDays(1), Title = "Doctor", Description = "Checkup" }
             );
         }
     }
