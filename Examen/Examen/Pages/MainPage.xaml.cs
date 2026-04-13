@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Linq;
+using System.Numerics;
 using Windows.UI;
 
 namespace Examen.Pages
@@ -14,30 +15,46 @@ namespace Examen.Pages
     {
         private DateTime _currentDate = DateTime.Now;
         private AppDbContext _db = new AppDbContext();
+        private Doctor? _selectedDoctor = null;
 
         public MainPage()
         {
             this.InitializeComponent();
             _db.Database.EnsureCreated();
+            LoadDoctors();
+            RenderCalendar();
+        }
+
+        private void LoadDoctors()
+        {
+            var doctors = _db.Doctors.ToList();
+            DoctorPicker.ItemsSource = doctors;
+        }
+
+        private void DoctorPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _selectedDoctor = DoctorPicker.SelectedItem as Doctor;
             RenderCalendar();
         }
 
         private void RenderCalendar()
         {
             CalendarGrid.Children.Clear();
-
             MonthText.Text = _currentDate.ToString("MMMM yyyy");
 
             DateTime firstDay = new DateTime(_currentDate.Year, _currentDate.Month, 1);
             int startDay = (int)firstDay.DayOfWeek;
-
-            // Monday = first column
             startDay = (startDay == 0) ? 6 : startDay - 1;
 
             int daysInMonth = DateTime.DaysInMonth(_currentDate.Year, _currentDate.Month);
             int cellIndex = startDay;
 
-            var appointments = _db.Appointments.ToList();
+            // Filter by selected doctor, or load all if none selected
+            var appointments = _selectedDoctor == null
+                ? _db.Appointments.ToList()
+                : _db.Appointments
+                      .Where(a => a.DoctorId == _selectedDoctor.Id)
+                      .ToList();
 
             for (int day = 1; day <= daysInMonth; day++)
             {
@@ -59,7 +76,6 @@ namespace Examen.Pages
                     Text = day.ToString(),
                     HorizontalAlignment = HorizontalAlignment.Right
                 };
-
                 stack.Children.Add(dayText);
 
                 DateTime currentDay = new DateTime(_currentDate.Year, _currentDate.Month, day);
@@ -86,7 +102,6 @@ namespace Examen.Pages
                             CloseButtonText = "Close",
                             XamlRoot = this.Content.XamlRoot
                         };
-
                         await dialog.ShowAsync();
                     };
 
@@ -94,10 +109,8 @@ namespace Examen.Pages
                 }
 
                 border.Child = stack;
-
                 Grid.SetRow(border, row);
                 Grid.SetColumn(border, col);
-
                 CalendarGrid.Children.Add(border);
 
                 cellIndex++;

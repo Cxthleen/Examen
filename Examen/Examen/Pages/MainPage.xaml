@@ -9,23 +9,34 @@
     xmlns:controls="using:Examen.Controls"
     mc:Ignorable="d"
     Background="Snow">
-
     <Grid Padding="16">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
             <Button Content="◀" Click="PrevMonth_Click"/>
             <TextBlock x:Name="MonthText" FontSize="24" FontWeight="SemiBold"/>
             <Button Content="▶" Click="NextMonth_Click"/>
         </StackPanel>
 
+        <!-- Doctor filter -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12"
+                    Margin="0,12,0,0" HorizontalAlignment="Center">
+            <TextBlock Text="Doctor:" VerticalAlignment="Center"/>
+            <ComboBox x:Name="DoctorPicker"
+                      Width="200"
+                      PlaceholderText="All doctors"
+                      DisplayMemberPath="Name"
+                      SelectionChanged="DoctorPicker_SelectionChanged"/>
+        </StackPanel>
+
         <!-- Weekday headers -->
-        <Grid Grid.Row="1" Margin="0,12,0,8">
+        <Grid Grid.Row="2" Margin="0,12,0,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -35,7 +46,6 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-
             <TextBlock Text="Mon" Grid.Column="0" HorizontalAlignment="Center"/>
             <TextBlock Text="Tue" Grid.Column="1" HorizontalAlignment="Center"/>
             <TextBlock Text="Wed" Grid.Column="2" HorizontalAlignment="Center"/>
@@ -45,8 +55,8 @@
             <TextBlock Text="Sun" Grid.Column="6" HorizontalAlignment="Center"/>
         </Grid>
 
-        <!-- Calendar -->
-        <Grid x:Name="CalendarGrid" Grid.Row="2">
+        <!-- Calendar grid -->
+        <Grid x:Name="CalendarGrid" Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -56,7 +66,6 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
