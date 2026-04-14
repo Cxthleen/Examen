@@ -1,30 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Microsoft.UI.Xaml;
+using Examen.Data.Models;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
-namespace Examen.Pages;
-
-/// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
-/// </summary>
-public sealed partial class AppointmentDetailPage : Page
+namespace Examen.Pages
 {
-    public AppointmentDetailPage()
+    public sealed partial class AppointmentDetailPage : Page
     {
-        InitializeComponent();
+        public AppointmentDetailPage()
+        {
+            this.InitializeComponent();
+        }
+
+        // Call this right after navigation to populate the page
+        public void LoadAppointment(Appointment appt)
+        {
+            TitleText.Text = appt.Title;
+            DateText.Text = appt.Date.ToString("dddd, MMMM d yyyy");
+            TimeText.Text = appt.Date.ToString("HH:mm");
+            DescriptionText.Text = string.IsNullOrWhiteSpace(appt.Description)
+                                    ? "No notes added."
+                                    : appt.Description;
+            BadgeText.Text = "Appointment";
+            IdText.Text = $"ID #{appt.Id}";
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Frame.CanGoBack)
+                Frame.GoBack();
+        }
     }
 }

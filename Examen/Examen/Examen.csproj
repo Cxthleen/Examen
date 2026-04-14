@@ -14,6 +14,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\HeaderControl.xaml" />
+    <None Remove="Pages\AppointmentDetailPage.xaml" />
+    <None Remove="Pages\CreateReportPage.xaml" />
     <None Remove="Pages\LoginPage.xaml" />
     <None Remove="Pages\MainPage.xaml" />
   </ItemGroup>
@@ -50,6 +52,16 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
     <PackageReference Include="System.Text.Json" Version="9.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\CreateReportPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\AppointmentDetailPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\MainPage.xaml">

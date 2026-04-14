@@ -3,12 +3,98 @@
     x:Class="Examen.Pages.CreateReportPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Examen.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Background="#F4F6F9">
 
-    <Grid>
+    <!-- Scrollable form so it works on smaller screens -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel MaxWidth="600" Margin="40" HorizontalAlignment="Center" Spacing="16">
 
-    </Grid>
+            <!-- Page title -->
+            <TextBlock Text="New Report" FontSize="26" FontWeight="SemiBold" Foreground="#0F1C3F"/>
+
+            <!-- Patient dropdown: populated from the Patients table -->
+            <TextBlock Text="Patient" Foreground="#8A93A8"/>
+            <ComboBox x:Name="PatientPicker"
+                      HorizontalAlignment="Stretch"
+                      PlaceholderText="Select a patient"
+                      DisplayMemberPath="Name"
+                      SelectionChanged="PatientPicker_SelectionChanged"/>
+
+            <!-- Doctor dropdown: populated from the Doctors table -->
+            <TextBlock Text="Doctor" Foreground="#8A93A8"/>
+            <ComboBox x:Name="DoctorPicker"
+                      HorizontalAlignment="Stretch"
+                      PlaceholderText="Select a doctor"
+                      DisplayMemberPath="Name"
+                      SelectionChanged="DoctorPicker_SelectionChanged"/>
+
+            <!-- Appointment dropdown: disabled until both patient and doctor are selected.
+                 Only shows appointments that match the selected patient + doctor combo -->
+            <TextBlock Text="Appointment (optional)" Foreground="#8A93A8"/>
+            <ComboBox x:Name="AppointmentPicker"
+                      HorizontalAlignment="Stretch"
+                      PlaceholderText="Select patient and doctor first"
+                      DisplayMemberPath="DisplayText"
+                      IsEnabled="False"/>
+
+            <!-- Symptoms: required field -->
+            <TextBlock Text="Symptoms" Foreground="#8A93A8"/>
+            <TextBox x:Name="SymptomsBox"
+                     PlaceholderText="Describe the symptoms"
+                     AcceptsReturn="True"
+                     Height="90"
+                     TextWrapping="Wrap"/>
+
+            <!-- Diagnosis: required field -->
+            <TextBlock Text="Diagnosis" Foreground="#8A93A8"/>
+            <TextBox x:Name="DiagnosisBox"
+                     PlaceholderText="Enter the diagnosis"
+                     AcceptsReturn="True"
+                     Height="90"
+                     TextWrapping="Wrap"/>
+
+            <!-- Treatment: optional -->
+            <TextBlock Text="Treatment" Foreground="#8A93A8"/>
+            <TextBox x:Name="TreatmentBox"
+                     PlaceholderText="Describe the treatment plan"
+                     AcceptsReturn="True"
+                     Height="90"
+                     TextWrapping="Wrap"/>
+
+            <!-- Medication: optional -->
+            <TextBlock Text="Medication" Foreground="#8A93A8"/>
+            <TextBox x:Name="MedicationBox"
+                     PlaceholderText="e.g. Amoxicillin 500mg, 3x daily"
+                     AcceptsReturn="True"
+                     Height="70"
+                     TextWrapping="Wrap"/>
+
+            <!-- Notes: optional, any extra remarks -->
+            <TextBlock Text="Notes" Foreground="#8A93A8"/>
+            <TextBox x:Name="NotesBox"
+                     PlaceholderText="Any additional notes..."
+                     AcceptsReturn="True"
+                     Height="90"
+                     TextWrapping="Wrap"/>
+
+            <!-- Error message: hidden by default, shown when validation fails -->
+            <TextBlock x:Name="ErrorText"
+                       Foreground="Red"
+                       Visibility="Collapsed"
+                       TextWrapping="Wrap"/>
+
+            <!-- Cancel goes back, Save validates and writes to the database -->
+            <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                <Button Content="Cancel" Click="BackButton_Click"/>
+                <Button Content="Save Report"
+                        Click="SaveButton_Click"
+                        Background="#2C6BED"
+                        Foreground="White"/>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
 </Page>
